@@ -1,25 +1,16 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
-  countryCode: '',
-  phoneNo: '',
-  uid: '',
-  name: '',
-  avatar: '',
-  inbox: [],
-  contactList: [],
-  blockList: [],
-  online: false,
+  language: 'en',
 };
 
 const HomeSlice = createSlice({
   name: 'Auth',
   initialState,
   reducers: {
-    login: (state, action) => {
+    language: (state, action) => {
       const {payload} = action;
-      state.countryCode = payload.countryCode;
-      state.phoneNo = payload.phoneNo;
+      state.language = payload;
     },
   },
 });
