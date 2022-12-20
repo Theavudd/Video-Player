@@ -1,4 +1,5 @@
 const ScreenNames = {
+  splash: 'SplashScreen',
   home: 'Home',
 };
 

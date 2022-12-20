@@ -5,10 +5,11 @@ const initialState = {
 };
 
 const HomeSlice = createSlice({
-  name: 'Auth',
+  name: 'Home',
   initialState,
   reducers: {
     language: (state, action) => {
+      console.log('inreducer');
       const {payload} = action;
       state.language = payload;
     },
