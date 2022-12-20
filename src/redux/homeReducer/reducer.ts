@@ -12,7 +12,7 @@ const initialState = {
   online: false,
 };
 
-const AuthSlice = createSlice({
+const HomeSlice = createSlice({
   name: 'Auth',
   initialState,
   reducers: {
@@ -23,4 +23,4 @@ const AuthSlice = createSlice({
     },
   },
 });
-export default AuthSlice.reducer;
+export default HomeSlice.reducer;
