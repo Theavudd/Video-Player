@@ -37,6 +37,12 @@ const styles = StyleSheet.create({
   directory: {
     color: 'white',
   },
+  itemStyle: {
+    borderBottomWidth: 1,
+    borderColor: 'grey',
+    height: vh(50),
+    justifyContent: 'center',
+  },
 });
 
 export default styles;

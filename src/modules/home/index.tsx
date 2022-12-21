@@ -112,7 +112,7 @@ export default function Home({navigation}: any) {
   const renderItem = React.useCallback(({item}: any) => {
     if (item.name[0] !== '.') {
       return (
-        <Pressable onPress={() => onItemPress(item)}>
+        <Pressable style={styles.itemStyle} onPress={() => onItemPress(item)}>
           {item.isDirectory() ? (
             <Text style={styles.directory}>{item.name}</Text>
           ) : (
