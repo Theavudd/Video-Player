@@ -1,15 +1,23 @@
-import {View, Text, Platform, FlatList} from 'react-native';
+import {View, Text, Platform, FlatList, Pressable} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import I18n from '../../utils/I18n';
 import styles from './styles';
 import {check, PERMISSIONS, request} from 'react-native-permissions';
-var RNFS = require('react-native-fs');
-import {ExternalDirectoryPath} from 'react-native-fs';
+import RNFS from 'react-native-fs';
+import {RootDirectory} from '../../utils/commonFunctions';
 import FastImage from 'react-native-fast-image';
 import RNFetchBlob from 'rn-fetch-blob';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import ScreenNames from '../../utils/screenNames';
 
-export default function Home() {
-  const [data, setData] = useState([]);
+export default function Home({navigation}: any) {
+  const [data, setData]: any = useState([]);
+
+  const params = useRoute()?.params;
+
+  let directory: string | null = params?.directory;
+
+  // const navigation = useNavigation();
 
   const checkPermissions = async () => {
     const writePermissions = await check(
@@ -32,13 +40,25 @@ export default function Home() {
         }
       }
     }
+    let tempArr = [];
+    for (let i = 0; i < file.length; i++) {
+      if (file[i].isDirectory()) {
+        tempArr.push(file[i]);
+      }
+    }
+    for (let i = 0; i < file.length; i++) {
+      if (file[i].isFile()) {
+        tempArr.push(file[i]);
+      }
+    }
+    return tempArr;
   };
 
   const fileSystem = async () => {
     try {
-      let file = await RNFS.readDir('/storage/emulated/0/');
+      let file = await RNFS.readDir(directory ? directory : RootDirectory);
       sortData(file);
-      setData(file);
+      setData(sortData(file));
       console.log('files', file);
     } catch (error) {
       console.log(error);
@@ -81,23 +101,29 @@ export default function Home() {
     }
   }, []);
 
+  const onItemPress = (item: any) => {
+    // console.log(`${directory ? directory : RootDirectory}/${item.name}`);
+    // console.log('item', item);
+    navigation.push(ScreenNames.home, {
+      directory: `${directory ? directory : RootDirectory}/${item.name}`,
+    });
+  };
+
   const renderItem = React.useCallback(({item}: any) => {
-    console.log('item', item.isFile());
-    if (item.isDirectory()) {
-      return item.name[0] !== '.' ? (
-        <View>
-          <Text style={styles.directory}>{item.name}</Text>
-        </View>
-      ) : null;
-    } else if (item.isFile()) {
+    if (item.name[0] !== '.') {
       return (
-        <View>
-          <Text style={styles.fileStyle}>{item.name}</Text>
-        </View>
+        <Pressable onPress={() => onItemPress(item)}>
+          {item.isDirectory() ? (
+            <Text style={styles.directory}>{item.name}</Text>
+          ) : (
+            <Text style={styles.fileStyle}>{item.name}</Text>
+          )}
+        </Pressable>
       );
     } else {
       return null;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
