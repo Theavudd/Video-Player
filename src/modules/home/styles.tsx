@@ -1,13 +1,14 @@
 import {StyleSheet} from 'react-native';
+import Colors from '../../utils/colors';
 import {vh, vw} from '../../utils/dimension';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0D141A',
+    backgroundColor: Colors.dark,
   },
   header: {
-    backgroundColor: '#121B24',
+    backgroundColor: Colors.greyish,
     height: vh(60),
     borderBottomColor: 'white',
     borderBottomWidth: vh(1),

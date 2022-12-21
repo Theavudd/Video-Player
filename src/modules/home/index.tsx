@@ -4,10 +4,9 @@ import I18n from '../../utils/I18n';
 import styles from './styles';
 import {check, PERMISSIONS, request} from 'react-native-permissions';
 import RNFS from 'react-native-fs';
-import {RootDirectory} from '../../utils/commonFunctions';
+import {checkFile, RootDirectory} from '../../utils/commonFunctions';
 import FastImage from 'react-native-fast-image';
-import RNFetchBlob from 'rn-fetch-blob';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useRoute} from '@react-navigation/native';
 import ScreenNames from '../../utils/screenNames';
 import localimage from '../../utils/localimage';
 
@@ -60,7 +59,6 @@ export default function Home({navigation}: any) {
       let file = await RNFS.readDir(directory ? directory : RootDirectory);
       sortData(file);
       setData(sortData(file));
-      console.log('files', file);
     } catch (error) {
       console.log(error);
     }
@@ -103,11 +101,18 @@ export default function Home({navigation}: any) {
   }, []);
 
   const onItemPress = (item: any) => {
-    // console.log(`${directory ? directory : RootDirectory}/${item.name}`);
-    // console.log('item', item);
-    navigation.push(ScreenNames.home, {
-      directory: `${directory ? directory : RootDirectory}/${item.name}`,
-    });
+    if (item.isDirectory()) {
+      navigation.push(ScreenNames.home, {
+        directory: `${directory ? directory : RootDirectory}/${item.name}`,
+      });
+    } else if (item.isFile()) {
+      const fileExt = checkFile(item);
+      if (fileExt == 'mkv') {
+        navigation.navigate(ScreenNames.videoPlayer, {
+          videoPath: `${directory ? directory : RootDirectory}/${item.name}`,
+        });
+      }
+    }
   };
 
   const renderItem = React.useCallback(({item}: any) => {
