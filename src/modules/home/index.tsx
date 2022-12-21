@@ -1,4 +1,4 @@
-import {View, Text, Platform, FlatList, Pressable} from 'react-native';
+import {View, Text, Platform, FlatList, Pressable, Image} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import I18n from '../../utils/I18n';
 import styles from './styles';
@@ -9,6 +9,7 @@ import FastImage from 'react-native-fast-image';
 import RNFetchBlob from 'rn-fetch-blob';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import ScreenNames from '../../utils/screenNames';
+import localimage from '../../utils/localimage';
 
 export default function Home({navigation}: any) {
   const [data, setData]: any = useState([]);
@@ -112,13 +113,18 @@ export default function Home({navigation}: any) {
   const renderItem = React.useCallback(({item}: any) => {
     if (item.name[0] !== '.') {
       return (
-        <Pressable style={styles.itemStyle} onPress={() => onItemPress(item)}>
-          {item.isDirectory() ? (
-            <Text style={styles.directory}>{item.name}</Text>
-          ) : (
-            <Text style={styles.fileStyle}>{item.name}</Text>
-          )}
-        </Pressable>
+        <View style={{paddingLeft: 20}}>
+          <Pressable style={styles.itemStyle} onPress={() => onItemPress(item)}>
+            {item.isDirectory() ? (
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Image source={localimage.folder} style={styles.logo} />
+                <Text style={styles.directory}>{item.name}</Text>
+              </View>
+            ) : (
+              <Text style={styles.fileStyle}>{item.name}</Text>
+            )}
+          </Pressable>
+        </View>
       );
     } else {
       return null;
@@ -137,7 +143,18 @@ export default function Home({navigation}: any) {
         </View>
       ) : ( */}
       <View style={styles.header}>
-        <Text style={styles.headerText}>{I18n.t('internalStorage')}</Text>
+        <View style={styles.logoName}>
+          <Image source={localimage.logo} style={styles.logo} />
+          <Text style={styles.headerText}>{I18n.t('files')}</Text>
+        </View>
+        {/* <View style={styles.iconParent}>
+          {/* <Pressable>
+            <Image style={styles.smallIcons} source={localimage.reload} />
+          </Pressable> */}
+        <Pressable style={styles.iconParent}>
+          <Image style={styles.smallIcons} source={localimage.dots} />
+        </Pressable>
+        {/* </View> */}
       </View>
       <FlatList data={data} renderItem={renderItem} />
       {/* )} */}

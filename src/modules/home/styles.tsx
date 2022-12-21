@@ -9,9 +9,11 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor: '#121B24',
     height: vh(60),
-    justifyContent: 'center',
     borderBottomColor: 'white',
     borderBottomWidth: vh(1),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
   },
   headerText: {
     color: 'white',
@@ -36,12 +38,34 @@ const styles = StyleSheet.create({
   },
   directory: {
     color: 'white',
+    paddingLeft: 10,
   },
   itemStyle: {
     borderBottomWidth: 1,
     borderColor: 'grey',
     height: vh(50),
     justifyContent: 'center',
+  },
+  logo: {
+    height: vh(35),
+    width: vh(35),
+    padding: 5,
+  },
+  smallIcons: {
+    height: vh(18),
+    width: vh(18),
+    tintColor: '#ffffff',
+  },
+  logoName: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    // backgroundColor: 'red',
+    width: 90,
+  },
+  iconParent: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
 
