@@ -7,21 +7,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.dark,
   },
-  header: {
-    backgroundColor: Colors.greyish,
-    height: vh(60),
-    borderBottomColor: 'white',
-    borderBottomWidth: vh(1),
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-  },
-  headerText: {
-    color: 'white',
-    fontWeight: '500',
-    fontSize: vw(16),
-    lineHeight: vh(24),
-  },
+
   permissionContainer: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -34,17 +20,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'aqua',
   },
-  fileStyle: {
-    color: 'white',
+  fileStyleText: {
+    // color: 'red',
+    fontSize: vw(14),
   },
-  directory: {
+  directoryName: {
+    fontSize: vw(14),
     color: 'white',
-    paddingLeft: 10,
   },
   itemStyle: {
-    borderBottomWidth: 1,
-    borderColor: 'grey',
-    height: vh(50),
+    height: vh(60),
     justifyContent: 'center',
   },
   logo: {
@@ -55,18 +40,34 @@ const styles = StyleSheet.create({
   smallIcons: {
     height: vh(18),
     width: vh(18),
-    tintColor: '#ffffff',
+    // tintColor: '#ffffff',
   },
   logoName: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
-    // backgroundColor: 'red',
-    width: 90,
+    width: vw(90),
   },
   iconParent: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  innerItemContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  itemContainer: {
+    paddingHorizontal: vw(10),
+    width: '95%',
+  },
+  fileModified: {
+    color: Colors.white,
+    // backgroundColor: 'red',
+    fontSize: vw(9.5),
+  },
+  nameContainer: {
+    // backgroundColor: 'red',
+    paddingLeft: vw(10),
   },
 });
 

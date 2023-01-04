@@ -1,6 +1,5 @@
 import {View, Text, Platform, FlatList, Pressable, Image} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import I18n from '../../utils/I18n';
 import styles from './styles';
 import {check, PERMISSIONS, request} from 'react-native-permissions';
 import RNFS from 'react-native-fs';
@@ -8,16 +7,20 @@ import {checkFile, RootDirectory} from '../../utils/commonFunctions';
 import FastImage from 'react-native-fast-image';
 import {useRoute} from '@react-navigation/native';
 import ScreenNames from '../../utils/screenNames';
-import localimage from '../../utils/localimage';
+import localImages from '../../utils/localImages';
+import CustomHeader from '../../components/header';
+import moment from 'moment';
 
 export default function Home({navigation}: any) {
   const [data, setData]: any = useState([]);
 
-  const params = useRoute()?.params;
+  const params: any = useRoute()?.params;
 
   let directory: string | null = params?.directory;
 
-  // const navigation = useNavigation();
+  // useEffect(() => {
+  //   Orientation.lockToPortrait();
+  // }, []);
 
   const checkPermissions = async () => {
     const writePermissions = await check(
@@ -56,7 +59,7 @@ export default function Home({navigation}: any) {
 
   const fileSystem = async () => {
     try {
-      let file = await RNFS.readDir(directory ? directory : RootDirectory);
+      let file = await RNFS.readDir(directory ?? RootDirectory);
       sortData(file);
       setData(sortData(file));
     } catch (error) {
@@ -64,32 +67,7 @@ export default function Home({navigation}: any) {
     }
   };
 
-  // const getVideos = async () => {
-  //   try {
-  //     const videoPaths = await RNFetchBlob.fs.ls(
-  //       RNFetchBlob.fs.dirs.PictureDir,
-  //     );
-  //     // let file = await RNFS.readDir(`${videoPaths}/.thumbnails`);
-  //     console.log('video', videoPaths);
-  //     // console.log('files', file);
-  //     // const videos = await Promise.all(
-  //     //   videoPaths.map(async path => {
-  //     //     // const metadata = await RNFetchBlob.fs.stat(path);
-  //     //     return {
-  //     //       path,
-  //     //       filename: metadata.filename,
-  //     //       size: metadata.size,
-  //     //     };
-  //     //   }),
-  //     // );
-  //     // return videos;
-  //   } catch (error) {
-  //     console.log('ero', error);
-  //   }
-  // };
-
   useEffect(() => {
-    // getVideos().then((videos: any) => setData(videos));
     fileSystem();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -107,7 +85,7 @@ export default function Home({navigation}: any) {
       });
     } else if (item.isFile()) {
       const fileExt = checkFile(item);
-      if (fileExt == 'mkv') {
+      if (fileExt === 'mkv' || 'mp4' || 'avi') {
         navigation.navigate(ScreenNames.videoPlayer, {
           videoPath: `${directory ? directory : RootDirectory}/${item.name}`,
         });
@@ -116,17 +94,45 @@ export default function Home({navigation}: any) {
   };
 
   const renderItem = React.useCallback(({item}: any) => {
+    let date = new Date(item?.mtime);
     if (item.name[0] !== '.') {
       return (
-        <View style={{paddingLeft: 20}}>
+        <View style={styles.itemContainer}>
           <Pressable style={styles.itemStyle} onPress={() => onItemPress(item)}>
             {item.isDirectory() ? (
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Image source={localimage.folder} style={styles.logo} />
-                <Text style={styles.directory}>{item.name}</Text>
+              <View style={styles.innerItemContainer}>
+                <Image
+                  source={localImages.folder}
+                  style={[
+                    styles.logo,
+                    // eslint-disable-next-line react-native/no-inline-styles
+                    item.isDirectory && {tintColor: '#ffffff'},
+                  ]}
+                />
+                <View style={styles.nameContainer}>
+                  <Text style={styles.directoryName}>{item.name}</Text>
+                  <Text style={styles.fileModified}>
+                    {moment(date).format('ll')}
+                  </Text>
+                </View>
               </View>
             ) : (
-              <Text style={styles.fileStyle}>{item.name}</Text>
+              <View style={styles.innerItemContainer}>
+                <Image
+                  source={{
+                    uri: `file://${directory ? directory : RootDirectory}/${
+                      item.name
+                    }`,
+                  }}
+                  style={styles.logo}
+                />
+                <View style={styles.nameContainer}>
+                  <Text style={styles.fileStyleText}>{item.name}</Text>
+                  <Text style={styles.fileModified}>
+                    {`${date.getDate()} ${date.getUTCMonth()} ${date.getFullYear()}`}
+                  </Text>
+                </View>
+              </View>
             )}
           </Pressable>
         </View>
@@ -147,20 +153,7 @@ export default function Home({navigation}: any) {
           </Pressable>
         </View>
       ) : ( */}
-      <View style={styles.header}>
-        <View style={styles.logoName}>
-          <Image source={localimage.logo} style={styles.logo} />
-          <Text style={styles.headerText}>{I18n.t('files')}</Text>
-        </View>
-        {/* <View style={styles.iconParent}>
-          {/* <Pressable>
-            <Image style={styles.smallIcons} source={localimage.reload} />
-          </Pressable> */}
-        <Pressable style={styles.iconParent}>
-          <Image style={styles.smallIcons} source={localimage.dots} />
-        </Pressable>
-        {/* </View> */}
-      </View>
+      <CustomHeader navigation={navigation} />
       <FlatList data={data} renderItem={renderItem} />
       {/* )} */}
     </View>
