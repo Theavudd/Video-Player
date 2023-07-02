@@ -33,8 +33,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   logo: {
-    height: vh(35),
-    width: vh(35),
+    height: vh(40),
+    width: vh(40),
     padding: 5,
   },
   smallIcons: {

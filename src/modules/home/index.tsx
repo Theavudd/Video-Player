@@ -4,7 +4,6 @@ import styles from './styles';
 import {check, PERMISSIONS, request} from 'react-native-permissions';
 import RNFS from 'react-native-fs';
 import {checkFile, RootDirectory} from '../../utils/commonFunctions';
-import FastImage from 'react-native-fast-image';
 import {useRoute} from '@react-navigation/native';
 import ScreenNames from '../../utils/screenNames';
 import localImages from '../../utils/localImages';
@@ -17,10 +16,6 @@ export default function Home({navigation}: any) {
   const params: any = useRoute()?.params;
 
   let directory: string | null = params?.directory;
-
-  // useEffect(() => {
-  //   Orientation.lockToPortrait();
-  // }, []);
 
   const checkPermissions = async () => {
     const writePermissions = await check(
@@ -40,15 +35,24 @@ export default function Home({navigation}: any) {
             file[i] = file[j];
             file[j] = temp;
           }
+        } else {
+          if (file[i].name.toLowerCase() < file[j].name.toLowerCase()) {
+            let temp = file[i];
+            file[i] = file[j];
+            file[j] = temp;
+          }
         }
       }
     }
+
     let tempArr = [];
+
     for (let i = 0; i < file.length; i++) {
       if (file[i].isDirectory()) {
         tempArr.push(file[i]);
       }
     }
+
     for (let i = 0; i < file.length; i++) {
       if (file[i].isFile()) {
         tempArr.push(file[i]);
@@ -129,7 +133,7 @@ export default function Home({navigation}: any) {
                 <View style={styles.nameContainer}>
                   <Text style={styles.fileStyleText}>{item.name}</Text>
                   <Text style={styles.fileModified}>
-                    {`${date.getDate()} ${date.getUTCMonth()} ${date.getFullYear()}`}
+                    {`${moment(date).fromNow()}`}
                   </Text>
                 </View>
               </View>
@@ -142,6 +146,8 @@ export default function Home({navigation}: any) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  console.log('data', data);
 
   return (
     <View style={styles.container}>

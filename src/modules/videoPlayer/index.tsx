@@ -1,7 +1,7 @@
 import {BackHandler, Pressable, View} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 //@tsignore
-import VideoPlayer from 'react-native-video-controls';
+import Video from 'react-native-video';
 import styles from './styles';
 import {useRoute} from '@react-navigation/native';
 import Orientation from 'react-native-orientation-locker';
@@ -10,9 +10,9 @@ import {VolumeManager} from 'react-native-volume-manager';
 
 export default function PlayVideos({navigation}: any) {
   const {videoPath}: any = useRoute().params;
-  const videoRef = useRef();
+  const videoRef:any = useRef();
   const [isPaused, setPause] = useState(false);
-  const [volume, setVolume] = useState();
+  const [volume, setVolume] = useState(100);
 
   //   console.log('params', videoPath);
 
@@ -28,20 +28,21 @@ export default function PlayVideos({navigation}: any) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    console.log(
-      'responder',
-      videoRef.current?.player?.volumePanResponder?.panHandlers?.onResponderRelease(),
-    );
-  }, [videoRef]);
+  // useEffect(() => {
+  //   console.log(
+  //     'responder',
+  //     videoRef.current?.player?.volumePanResponder?.panHandlers?.onResponderRelease(),
+  //   );
+  // }, [videoRef]);
 
   const onBackPress = () => {
     Orientation.unlockAllOrientations();
     navigation.goBack();
   };
+
   return (
     <View style={styles.container}>
-      <Pressable
+      {/* <Pressable
         style={styles.innerContainer}
         onPress={async () => {
           // await VolumeManager.setVolume(videoRef?.current?.state?.volume, {
@@ -54,11 +55,18 @@ export default function PlayVideos({navigation}: any) {
           //   // defaults to false (Android only)
           //   playSound: false,
           // });
+          console.log('lkogged',videoRef?.current?.state?.volume)
           await VolumeManager.setVolume(videoRef?.current?.state?.volume);
-          console.log(videoRef.current);
+          console.log('current volume',videoRef.current);
         }}
+      /> */}
+      <Video
+      source={{uri: `file://${videoPath}`}}
+      style={styles.videoPlayer}
+      resizeMode='contain'
+      paused={isPaused}
       />
-      <VideoPlayer
+      {/* <Video
         source={{uri: `file://${videoPath}`}}
         ref={videoRef}
         pictureInPicture={true}
@@ -67,18 +75,16 @@ export default function PlayVideos({navigation}: any) {
         onEnd={() => {
           setPause(true);
         }}
-        onBack={onBackPress}
-        disableFullscreen={false}
-        onEnterFullscreen={() => {
+        fullscreen={true}
+        onVideoFullscreenPlayerWillPresent={() => {
           Orientation.lockToLandscape();
         }}
-        onExitFullscreen={() => {
+        onVideoFullscreenPlayerWillDismiss={() => {
           Orientation.lockToPortrait();
         }}
-        seekColor={Colors.greyish}
         onProgress={onProgress}
         volume={volume}
-      />
+      /> */}
     </View>
   );
 }
