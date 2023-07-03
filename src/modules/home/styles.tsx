@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import {Platform, StatusBar, StyleSheet} from 'react-native';
 import Colors from '../../utils/colors';
 import {vh, vw} from '../../utils/dimension';
 
@@ -6,6 +6,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.dark,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 30,
   },
 
   permissionContainer: {

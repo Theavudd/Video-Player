@@ -3,12 +3,18 @@ import React, {useEffect, useState} from 'react';
 import styles from './styles';
 import {check, PERMISSIONS, request} from 'react-native-permissions';
 import RNFS from 'react-native-fs';
-import {checkFile, RootDirectory} from '../../utils/commonFunctions';
+import {
+  checkFile,
+  getFileSize,
+  getTime,
+  RootDirectory,
+} from '../../utils/commonFunctions';
 import {useRoute} from '@react-navigation/native';
 import ScreenNames from '../../utils/screenNames';
 import localImages from '../../utils/localImages';
 import CustomHeader from '../../components/header';
 import moment from 'moment';
+import Row from '../../components/row';
 
 export default function Home({navigation}: any) {
   const [data, setData]: any = useState([]);
@@ -91,6 +97,7 @@ export default function Home({navigation}: any) {
       const fileExt = checkFile(item);
       if (fileExt === 'mkv' || 'mp4' || 'avi') {
         navigation.navigate(ScreenNames.videoPlayer, {
+          name: item?.name,
           videoPath: `${directory ? directory : RootDirectory}/${item.name}`,
         });
       }
@@ -99,6 +106,7 @@ export default function Home({navigation}: any) {
 
   const renderItem = React.useCallback(({item}: any) => {
     let date = new Date(item?.mtime);
+    const {size} = item;
     if (item.name[0] !== '.') {
       return (
         <View style={styles.itemContainer}>
@@ -109,15 +117,12 @@ export default function Home({navigation}: any) {
                   source={localImages.folder}
                   style={[
                     styles.logo,
-                    // eslint-disable-next-line react-native/no-inline-styles
                     item.isDirectory && {tintColor: '#ffffff'},
                   ]}
                 />
                 <View style={styles.nameContainer}>
                   <Text style={styles.directoryName}>{item.name}</Text>
-                  <Text style={styles.fileModified}>
-                    {moment(date).format('ll')}
-                  </Text>
+                  <Text style={styles.fileModified}>{getTime(date)}</Text>
                 </View>
               </View>
             ) : (
@@ -132,9 +137,11 @@ export default function Home({navigation}: any) {
                 />
                 <View style={styles.nameContainer}>
                   <Text style={styles.fileStyleText}>{item.name}</Text>
-                  <Text style={styles.fileModified}>
-                    {`${moment(date).fromNow()}`}
-                  </Text>
+                  <Row>
+                    <Text style={styles.fileModified}>
+                      {`${getFileSize(size)}, ${getTime(date)}`}
+                    </Text>
+                  </Row>
                 </View>
               </View>
             )}

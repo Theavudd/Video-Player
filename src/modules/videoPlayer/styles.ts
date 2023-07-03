@@ -1,10 +1,14 @@
-import {StyleSheet} from 'react-native';
+import {Platform, StatusBar, StyleSheet} from 'react-native';
 import {normalize, vh, vw} from '../../utils/dimension';
+import Colors from '../../utils/colors';
 
 const styles = StyleSheet.create({
+  outerContainer: {
+    flex: 1,
+  },
   container: {
     flex: 1,
-    backgroundColor: 'black',
+    backgroundColor: Colors.dark,
   },
   innerContainer: {
     height: 100,
@@ -64,6 +68,16 @@ const styles = StyleSheet.create({
         scaleX: -1,
       },
     ],
+  },
+  topControls: {
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 30,
+    backgroundColor: Colors.greyish,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  slider: {
+    height: vh(100),
+    width: '90%',
   },
 });
 

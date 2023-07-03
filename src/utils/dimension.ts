@@ -5,6 +5,7 @@ export const SCREEN_HEIGHT = Dimensions.get('window').height;
 export const DESIGN_HEIGHT = 812;
 export const DESIGN_WIDTH = 375;
 export const hundred = 100;
+export const hitslop10 = {top: 10, right: 10, bottom: 10, left: 10};
 
 // It is based on the screen width of your design layouts e.g Height 600 x Width 375
 const scale = SCREEN_WIDTH / DESIGN_WIDTH;
